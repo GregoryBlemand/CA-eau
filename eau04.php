@@ -35,8 +35,6 @@ function isNumeric(string $string) {
     return preg_match('/[0-9]+/', $string) && !preg_match('/\D/', $string);
 }
 
-
-
 /* gestion d'erreurs */
 const ERROR_CODE = -1;
 if ($argc == 1) { // pas d'argument
