@@ -23,7 +23,7 @@ function isNumeric(string $string) {
 
 function isLetter(string $letter)
 {
-    return preg_match('/[A-Za-z]/', $letter);
+    return preg_match('/\p{Latin}/', $letter);
 }
 
 /* gestion d'erreurs */
@@ -51,13 +51,13 @@ $letterCounter = 0;
 
 /* résolution */
 for ($i = 0; $i < $stringLength; $i++) {
-    $character = strtoupper($string[$i]);
+    $character = strtoupper(substr($string, $i, 1));
 
     if (isLetter($character)) {
         $letterCounter++;
 
         if ($letterCounter % 2 == 0) {
-            $character = strtolower($string[$i]);
+            $character = strtolower($character);
         }
     }
 
