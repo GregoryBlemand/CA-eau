@@ -18,9 +18,9 @@
 
 /* fonctions */
 
-function isASCIIString(string $string)
+function notASCIIString(string $string)
 {
-    return preg_match('/[\x00-\x7F]/', $string);
+    return preg_match('/![\00-\x7F]/', $string);
 }
 
 function getASCIICode(string $character): int
@@ -100,6 +100,22 @@ function moveValueUp(array $array, int $index): array
 if ($argc < 3) { // pas assez d'argument
     print "error : Pas assez de paramètre.\n";
     exit;
+}
+
+$stringList = [];
+
+for ($i = 1; $i < $argc; $i++) {
+    if (in_array($argv[$i], $stringList)) {
+        print "error : \"$argv[$i]\" a été envoyé en double.\n";
+        exit;
+    }
+
+    if (notASCIIString($argv[$i])) {
+        print "error : \"$argv[$i]\" contient des caractères non pris en compte.\n";
+        exit;
+    }
+
+    $stringList[] = $argv[$i];
 }
 
 /* récupération des données */
