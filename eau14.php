@@ -3,10 +3,10 @@
 /**
  * Consigne :
  *
- * Créez un programme qui trie une liste de nombres. Votre programme devra implémenter l’algorithme du tri à bulle.
+ * Créez un programme qui trie une liste de nombres. Votre programme devra implémenter l’algorithme du tri par sélection.
  *
  * Vous utiliserez une fonction de cette forme (selon votre langage) :
- * my_bubble_sort(array) {
+ * my_select_sort(array) {
  * # votre algorithme
  * return (new_array)
  * }
@@ -17,7 +17,6 @@
  *
  * $> python exo.py test test test
  * error
- *
  *
  * Afficher error et quitter le programme en cas de problèmes d’arguments.
  *
@@ -30,44 +29,49 @@ function isNumeric(string $string) {
     return preg_match('/[0-9]+/', $string) && !preg_match('/\D/', $string);
 }
 
-/*
- * Tri à bulle (optimisé) source wikipedia: https://fr.wikipedia.org/wiki/Tri_%C3%A0_bulles#Principe_et_pseudo-code
- */
-function my_bubble_sort(array $toSort): array
+function my_select_sort(array $toSort): array
 {
-    $length = count($toSort);
     $sortedArray = $toSort;
 
-    for ($i = $length -1; $i > 0 ; $i--) {
-        $arrayIsSorted = true;
+    $length = count($sortedArray);
 
-        for ($j = 0; $j <= $i -1; $j++) {
-            if ($sortedArray[$j+1] < $sortedArray[$j]) {
-                $sortedArray = moveValueUp($sortedArray, $j);
-                $arrayIsSorted = false;
-            }
+    for ($i = 0; $i < $length - 2; $i++) {
+        $min = getMinValueIndexStartingFrom($sortedArray, $i);
 
-        }
-
-        if ($arrayIsSorted) {
-            break;
+        if ($min !== $i)
+        {
+            $sortedArray = permutateValues($sortedArray, $min, $i);
         }
     }
 
     return $sortedArray;
 }
 
-function moveValueUp(array $array, int $index): array
+function getMinValueIndexStartingFrom(array $sortedArray, int $indexStart): int
 {
-    $valueToMoveUp = $array[$index];
+    $length = count($sortedArray);
+    $minIndex = $indexStart;
+    for ($i = $indexStart; $i < $length; $i++) {
+        if ($sortedArray[$i] < $sortedArray[$minIndex])
+        {
+            $minIndex = $i;
+        }
+    }
 
-    $array[$index] = $array[$index + 1];
-    $array[$index + 1] = $valueToMoveUp;
+    return $minIndex;
+}
 
-    return $array;
+function permutateValues(array $sortedArray, int $minIndex, int $i): array
+{
+    $higherValue = $sortedArray[$i];
+    $sortedArray[$i] = $sortedArray[$minIndex];
+    $sortedArray[$minIndex] = $higherValue;
+
+    return $sortedArray;
 }
 
 /* gestion d'erreurs */
+
 if ($argc < 3) { // pas assez d'argument
     print "error : Pas assez de paramètre.\n";
     exit;
@@ -91,8 +95,7 @@ for ($i = 1; $i < $argc; $i++) {
 /* récupération des données */
 
 /* résolution */
-$sortedArray = my_bubble_sort($arrayToSort);
+$sortedArray = my_select_sort($arrayToSort);
 
 /* affichage */
 print implode(' ', $sortedArray)."\n";
-
